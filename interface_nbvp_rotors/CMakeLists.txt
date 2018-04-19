@@ -12,7 +12,6 @@ MESSAGE(STATUS "nbvplanner_INCLUDE_DIRS:${nbvplanner_INCLUDE_DIRS}")
 include_directories(${Eigen_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
 
 catkin_package(
-  INCLUDE_DIRS include
   CATKIN_DEPENDS trajectory_msgs mav_msgs tf nbvplanner
 )
 
