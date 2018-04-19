@@ -11,12 +11,11 @@
   <arg name="mesh_resolution" default="1.0" />
   <arg name="resolution" default="0.1" />
   <arg name="visualize_max_z" default="1.5" />
-  <arg name="sensor_max_range" default="7.0" />
+  <arg name="sensor_max_range" default="5.0" />
   <arg name="peer_vehicle_pose_topic_1" default="peer_pose_1" />
   <arg name="peer_vehicle_pose_topic_2" default="peer_pose_2" />
   <arg name="peer_vehicle_pose_topic_3" default="peer_pose_3" />
-  
-  
+ 
   <group ns="$(arg mav_name)$(arg subscript)">
     <param name="wp_x" type="double" value="$(arg waypoint_x)" />
     <param name="wp_y" type="double" value="$(arg waypoint_y)" />
