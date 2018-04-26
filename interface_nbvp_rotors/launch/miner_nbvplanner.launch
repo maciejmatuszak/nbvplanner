@@ -4,7 +4,7 @@
   <arg name="waypoint_y" default="0" />
   <arg name="waypoint_z" default="1" />
   <arg name="subscript" default="" />
-  <arg name="param_file" default="$(find interface_nbvp_rotors)/resource/exploration.yaml" />
+  <arg name="param_file" default="$(find interface_nbvp_rotors)/resource/miner_exploration.yaml" />
   <arg name="tf_frame" default="mission" />
   <arg name="pcl_topic" default="/gpuimageproc/pointcloud" />
   <arg name="stl_file_path" default="" />  
