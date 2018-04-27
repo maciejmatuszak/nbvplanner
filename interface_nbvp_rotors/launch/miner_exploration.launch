@@ -1,4 +1,5 @@
 <launch>
+
   <env name="ROSCONSOLE_CONFIG_FILE" value="$(find interface_nbvp_rotors)/resource/custom_rosconsole.conf"/>
   <arg name="mav_name" default="miner" />
   <arg name="waypoint_x" default="0" />
@@ -22,20 +23,7 @@
     <param name="wp_y" type="double" value="$(arg waypoint_y)" />
     <param name="wp_z" type="double" value="$(arg waypoint_z)" />
 
-    <node name="nbvPlanner" pkg="nbvplanner" type="nbvPlanner" output="screen" launch-prefix2="valgrind --leak-check=full --track-origins=yes ">
-      <param name="tf_frame" type="string" value="$(arg tf_frame)" />
-      <param name="resolution" type="double" value="$(arg resolution)" />
-      <param name="visualize_max_z" type="double" value="$(arg visualize_max_z)" />
-      <param name="sensor_max_range" type="double" value="$(arg sensor_max_range)" />
-      <param name="stl_file_path" type="string" value="$(arg stl_file_path)" />
-      <param name="mesh_resolution" type="double" value="$(arg mesh_resolution)" />
-      <param name="map_publish_frequency" type="double" value="1.0" />
-      <remap from="pointcloud_throttled" to="$(arg pcl_topic)"/>
-      <remap from="pose" to="/msf_core/pose"/>
-      <remap from="nbvplanner" to="/$(arg mav_name)$(arg subscript)/nbvplanner"/>
-      <remap from="peer_pose_1" to="$(arg peer_vehicle_pose_topic_1)"/>
-      <remap from="peer_pose_2" to="$(arg peer_vehicle_pose_topic_2)"/>
-      <remap from="peer_pose_3" to="$(arg peer_vehicle_pose_topic_3)"/>
+    <node name="exploration" pkg="interface_nbvp_rotors" type="exploration" output="screen" >
       <rosparam command="load" file="$(arg param_file)" />
     </node>
   </group>

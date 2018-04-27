@@ -3,9 +3,9 @@ system/dyaw_max: 0.75
 system/camera/pitch: [0.0]
 system/camera/horizontal: [72.0]
 system/camera/vertical: [54.0]
-system/bbx/x: 0.5
-system/bbx/y: 0.5
-system/bbx/z: 0.3
+system/bbx/x: 0.3
+system/bbx/y: 0.3
+system/bbx/z: 0.1
 system/bbx/overshoot: 0.5
 
 nbvp/gain/free: 0.0
