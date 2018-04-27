@@ -182,8 +182,10 @@ bool nbvInspection::nbvPlanner<stateVec>::plannerCallback(nbvplanner::nbvp_srv::
   res.path.clear();
 
   // Clear old tree and reinitialize.
+  auto clear_init_time = ros::Time::now();
   tree_->clear();
   tree_->initialize();
+  ROS_DEBUG("Path computation Initialise lasted %2.3fs", (ros::Time::now() - clear_init_time).toSec());
   vector_t path;
   // Iterate the tree construction method.
   int loopCount = 0;
@@ -198,7 +200,9 @@ bool nbvInspection::nbvPlanner<stateVec>::plannerCallback(nbvplanner::nbvp_srv::
       res.path = tree_->getPathBackToPrevious(req.header.frame_id);
       return true;
     }
+    auto iter_time = ros::Time::now();
     tree_->iterate(1);
+    ROS_DEBUG("Path computation Iteration lasted %2.3fs", (ros::Time::now() - iter_time).toSec());
     loopCount++;
   }
   // Extract the best edge.
