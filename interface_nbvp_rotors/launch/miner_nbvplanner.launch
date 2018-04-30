@@ -1,5 +1,5 @@
 <launch>
-  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find interface_nbvp_rotors)/resource/custom_rosconsole.conf"/>
+  <!-- env name="ROSCONSOLE_CONFIG_FILE" value="$(find interface_nbvp_rotors)/resource/custom_rosconsole.conf"/ -->
   <arg name="mav_name" default="miner" />
   <arg name="waypoint_x" default="0" />
   <arg name="waypoint_y" default="0" />
