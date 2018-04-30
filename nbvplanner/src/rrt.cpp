@@ -372,16 +372,6 @@ void nbvInspection::RrtTree::initialize()
 {
 // This function is to initialize the tree, including insertion of remainder of previous best branch.
   g_ID_ = 0;
-// Remove last segment from segment list (multi agent only)
-  int i;
-  for (i = 0; i < agentNames_.size(); i++) {
-    if (agentNames_[i].compare(params_.navigationFrame_) == 0) {
-      break;
-    }
-  }
-  if (i < agentNames_.size()) {
-    segments_[i]->clear();
-  }
 // Initialize kd-tree with root node and prepare log file
   kdTree_ = kd_create(3);
 
