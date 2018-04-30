@@ -35,30 +35,42 @@
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "exploration");
+  std::string frame_id = "world";
+  bool wait_for_gazebo_phisics  = true;
   ros::NodeHandle nh;
+  ros::NodeHandle private_nh("~");
   ros::Publisher trajectory_pub = nh.advertise < trajectory_msgs::MultiDOFJointTrajectory
       > (mav_msgs::default_topics::COMMAND_TRAJECTORY, 5);
   ROS_INFO("Started exploration");
 
-  std_srvs::Empty srv;
-  bool unpaused = ros::service::call("/gazebo/unpause_physics", srv);
-  unsigned int i = 0;
+  private_nh.param<std::string>("frame_id", frame_id, frame_id);
+  private_nh.param<bool>("wait_for_gazebo_phisics", wait_for_gazebo_phisics, wait_for_gazebo_phisics);
 
-  // Trying to unpause Gazebo for 10 seconds.
-  while (i <= 10 && !unpaused) {
-    ROS_INFO("Wait for 1 second before trying to unpause Gazebo again.");
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    unpaused = ros::service::call("/gazebo/unpause_physics", srv);
-    ++i;
+  if(wait_for_gazebo_phisics)
+  {
+    std_srvs::Empty srv;
+    bool unpaused = ros::service::call("/gazebo/unpause_physics", srv);
+    unsigned int i = 0;
+
+    // Trying to unpause Gazebo for 10 seconds.
+    while (i <= 10 && !unpaused)
+    {
+      ROS_INFO("Wait for 1 second before trying to unpause Gazebo again.");
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+      unpaused = ros::service::call("/gazebo/unpause_physics", srv);
+      ++i;
+    }
+
+    if (!unpaused)
+    {
+      ROS_FATAL("Could not wake up Gazebo.");
+      return -1;
+    }
+    else
+    {
+      ROS_INFO("Unpaused the Gazebo simulation.");
+    }
   }
-
-  if (!unpaused) {
-    ROS_FATAL("Could not wake up Gazebo.");
-    return -1;
-  } else {
-    ROS_INFO("Unpaused the Gazebo simulation.");
-  }
-
   double dt = 1.0;
   std::string ns = ros::this_node::getName();
   if (!ros::param::get(ns + "/nbvp/dt", dt)) {
@@ -80,6 +92,7 @@ int main(int argc, char** argv)
   // of initial paths.
   ROS_INFO("Starting the planner: Performing initialization motion");
   for (double i = 0; i <= 1.0; i = i + 0.1) {
+    //TODO: should use private nonde for the params
     nh.param<double>("wp_x", trajectory_point.position_W.x(), 0.0);
     nh.param<double>("wp_y", trajectory_point.position_W.y(), 0.0);
     nh.param<double>("wp_z", trajectory_point.position_W.z(), 1.0);
@@ -112,7 +125,7 @@ int main(int argc, char** argv)
     nbvplanner::nbvp_srv planSrv;
     planSrv.request.header.stamp = ros::Time::now();
     planSrv.request.header.seq = iteration;
-    planSrv.request.header.frame_id = "world";
+    planSrv.request.header.frame_id = frame_id;
     if (ros::service::call("nbvplanner", planSrv)) {
       n_seq++;
       if (planSrv.response.path.size() == 0) {
@@ -121,7 +134,7 @@ int main(int argc, char** argv)
       for (int i = 0; i < planSrv.response.path.size(); i++) {
         samples_array.header.seq = n_seq;
         samples_array.header.stamp = ros::Time::now();
-        samples_array.header.frame_id = "world";
+        samples_array.header.frame_id = frame_id;
         samples_array.points.clear();
         tf::Pose pose;
         tf::poseMsgToTF(planSrv.response.path[i], pose);
