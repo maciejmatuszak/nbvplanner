@@ -355,7 +355,7 @@ void nbvInspection::RrtTree::iterate(int iterations)
         + gain(newNode->state_) * exp(-params_.degressiveCoeff_ * newNode->distance_);
 
     kd_insert3(kdTree_, newState.x(), newState.y(), newState.z(), newNode);
-
+    ROS_DEBUG("Node found; gain: %f", newNode->gain_);
     // Display new node
     publishNode(newNode);
 

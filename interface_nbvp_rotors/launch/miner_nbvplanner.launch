@@ -1,0 +1,42 @@
+<launch>
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find interface_nbvp_rotors)/resource/custom_rosconsole.conf"/>
+  <arg name="mav_name" default="miner" />
+  <arg name="waypoint_x" default="0" />
+  <arg name="waypoint_y" default="0" />
+  <arg name="waypoint_z" default="1" />
+  <arg name="subscript" default="" />
+  <arg name="param_file" default="$(find interface_nbvp_rotors)/resource/miner_exploration.yaml" />
+  <arg name="tf_frame" default="mission" />
+  <arg name="pcl_topic" default="/gpuimageproc/pointcloud" />
+  <arg name="stl_file_path" default="" />  
+  <arg name="mesh_resolution" default="1.0" />
+  <arg name="resolution" default="0.1" />
+  <arg name="visualize_max_z" default="1.5" />
+  <arg name="sensor_max_range" default="5.0" />
+  <arg name="peer_vehicle_pose_topic_1" default="peer_pose_1" />
+  <arg name="peer_vehicle_pose_topic_2" default="peer_pose_2" />
+  <arg name="peer_vehicle_pose_topic_3" default="peer_pose_3" />
+ 
+  <group ns="$(arg mav_name)$(arg subscript)">
+    <param name="wp_x" type="double" value="$(arg waypoint_x)" />
+    <param name="wp_y" type="double" value="$(arg waypoint_y)" />
+    <param name="wp_z" type="double" value="$(arg waypoint_z)" />
+
+    <node name="nbvPlanner" pkg="nbvplanner" type="nbvPlanner" output="screen" launch-prefix2="gdb -ex run --args">
+      <param name="tf_frame" type="string" value="$(arg tf_frame)" />
+      <param name="resolution" type="double" value="$(arg resolution)" />
+      <param name="visualize_max_z" type="double" value="$(arg visualize_max_z)" />
+      <param name="sensor_max_range" type="double" value="$(arg sensor_max_range)" />
+      <param name="stl_file_path" type="string" value="$(arg stl_file_path)" />
+      <param name="mesh_resolution" type="double" value="$(arg mesh_resolution)" />
+      <param name="map_publish_frequency" type="double" value="1.0" />
+      <remap from="pointcloud_throttled" to="$(arg pcl_topic)"/>
+      <remap from="pose" to="/msf_core/pose"/>
+      <remap from="nbvplanner" to="/$(arg mav_name)$(arg subscript)/nbvplanner"/>
+      <remap from="peer_pose_1" to="$(arg peer_vehicle_pose_topic_1)"/>
+      <remap from="peer_pose_2" to="$(arg peer_vehicle_pose_topic_2)"/>
+      <remap from="peer_pose_3" to="$(arg peer_vehicle_pose_topic_3)"/>
+      <rosparam command="load" file="$(arg param_file)" />
+    </node>
+  </group>
+</launch>
