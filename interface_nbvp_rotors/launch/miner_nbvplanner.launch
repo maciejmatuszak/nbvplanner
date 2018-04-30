@@ -22,7 +22,7 @@
     <param name="wp_y" type="double" value="$(arg waypoint_y)" />
     <param name="wp_z" type="double" value="$(arg waypoint_z)" />
 
-    <node name="nbvPlanner" pkg="nbvplanner" type="nbvPlanner" output="screen" launch-prefix2="valgrind --leak-check=full --track-origins=yes ">
+    <node name="nbvPlanner" pkg="nbvplanner" type="nbvPlanner" output="screen" launch-prefix2="gdb -ex run --args">
       <param name="tf_frame" type="string" value="$(arg tf_frame)" />
       <param name="resolution" type="double" value="$(arg resolution)" />
       <param name="visualize_max_z" type="double" value="$(arg visualize_max_z)" />
